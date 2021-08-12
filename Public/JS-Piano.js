@@ -8,7 +8,7 @@ for (var i = 1; i <= 88; i++) {
   PianoKey[i].preload = "auto";
 }
 
-function pianist() {
+window.pianist = function () {
   var speed = 72; //以四分音符为准。每分钟演奏的速度
   //构建键盘表
   var KeyMap = new Array();
@@ -181,7 +181,7 @@ function pianist() {
       //   stop();
       // }
     }, 60000 / (speed * 8));
-  }, 1000);
+  }, 3000);
   return false;
 };
 
@@ -206,7 +206,7 @@ function delStyle(e) {
   $(".piano-key[scale=" + e + "]").removeClass("BKActive");
 }
 
-function stop() {
+var stop = function () {
   clearInterval(player);
 }
 
