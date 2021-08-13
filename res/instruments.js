@@ -1,0 +1,11 @@
+var E_PIANO = [
+  [{ key: 'A', scale: 1 }, { key: 'A#', scale: 2 }, { key: 'B', scale: 3 }],
+  [{ key: 'C', scale: 4 }, { key: 'C#', scale: 5 }, { key: 'D', scale: 6 }, { key: 'D#', scale: 7 }, { key: 'E', scale: 8 }, { key: 'F', scale: 9 }, { key: 'F#', scale: 10 }, { key: 'G', scale: 11 }, { key: 'G#', scale: 12 }, { key: 'A', scale: 13 }, { key: 'A#', scale: 14 }, { key: 'B', scale: 15 }],
+  [{ key: 'C', scale: 16 }, { key: 'C#', scale: 17 }, { key: 'D', scale: 18 }, { key: 'D#', scale: 19 }, { key: 'E', scale: 20 }, { key: 'F', scale: 21 }, { key: 'F#', scale: 22 }, { key: 'G', scale: 23 }, { key: 'G#', scale: 24 }, { key: 'A', scale: 25 }, { key: 'A#', scale: 26 }, { key: 'B', scale: 27 }],
+  [{ key: 'C', scale: 28 }, { key: 'C#', scale: 29 }, { key: 'D', scale: 30 }, { key: 'D#', scale: 31 }, { key: 'E', scale: 32 }, { key: 'F', scale: 33 }, { key: 'F#', scale: 34 }, { key: 'G', scale: 35 }, { key: 'G#', scale: 36 }, { key: 'A', scale: 37 }, { key: 'A#', scale: 38 }, { key: 'B', scale: 39 }],
+  [{ key: 'C', scale: 40 }, { key: 'C#', scale: 41 }, { key: 'D', scale: 42 }, { key: 'D#', scale: 43 }, { key: 'E', scale: 44 }, { key: 'F', scale: 45 }, { key: 'F#', scale: 46 }, { key: 'G', scale: 47 }, { key: 'G#', scale: 48 }, { key: 'A', scale: 49 }, { key: 'A#', scale: 50 }, { key: 'B', scale: 51 }],
+  [{ key: 'C', scale: 52 }, { key: 'C#', scale: 53 }, { key: 'D', scale: 54 }, { key: 'D#', scale: 55 }, { key: 'E', scale: 56 }, { key: 'F', scale: 57 }, { key: 'F#', scale: 58 }, { key: 'G', scale: 59 }, { key: 'G#', scale: 60 }, { key: 'A', scale: 61 }, { key: 'A#', scale: 62 }, { key: 'B', scale: 63 }],
+  [{ key: 'C', scale: 64 }, { key: 'C#', scale: 65 }, { key: 'D', scale: 66 }, { key: 'D#', scale: 67 }, { key: 'E', scale: 68 }, { key: 'F', scale: 69 }, { key: 'F#', scale: 70 }, { key: 'G', scale: 71 }, { key: 'G#', scale: 72 }, { key: 'A', scale: 73 }, { key: 'A#', scale: 74 }, { key: 'B', scale: 75 }],
+  [{ key: 'C', scale: 76 }, { key: 'C#', scale: 77 }, { key: 'D', scale: 78 }, { key: 'D#', scale: 79 }, { key: 'E', scale: 80 }, { key: 'F', scale: 81 }, { key: 'F#', scale: 82 }, { key: 'G', scale: 83 }, { key: 'G#', scale: 84 }, { key: 'A', scale: 85 }, { key: 'A#', scale: 86 }, { key: 'B', scale: 87 }],
+  [{ key: 'C', scale: 88 }]
+]

@@ -106,3 +106,19 @@
     <div scale="1" class="piano-key whiteKey">A</div>
   </div>
 </div>
+
+<script>
+  // 琴键音效即触发效果
+  function Playing(ele) {
+    if (ele.hasClass("whiteKey")) {
+      ele.addClass("WKActive");
+    } else {
+      ele.addClass("BKActive");
+    }
+    var pianoKey = new Audio("res/e-piano/" + ele.attr("scale") + ".mp3");
+    pianoKey.volume = 0.2;
+    pianoKey.currentTime = 0;
+    pianoKey.preload = "auto";
+    pianoKey.play();
+  }
+</script>
