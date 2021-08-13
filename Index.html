@@ -81,7 +81,7 @@
   <div id="app">
     <div class="PianoBlock bc-flex bc-flex-d-cr">
       <div v-for="(group,gi) in Piano" class="Ver8 bc-flex bc-flex-d-cr bc-flex-jc-c bc-flex-ai-s bc-t-999 bc-f-13rp ps-r" style="width:90px;">
-        <div v-for="(kb,ki) in group" class="piano-key" :scale="kb.scale" :class="ki==1||ki==3||ki==6||ki==8||ki==10 ? 'blackKey' : 'whiteKey'" :style="ki!=10 ? (ki!=8 ? (ki!=6 ? (ki!=3 ? (ki!=1 ? '' : 'top:144px') : 'top:120px') : 'top:72px') : 'top:48px') : 'top:24px'">{{kb.key}}</div>
+        <div v-for="(kb,ki) in group" class="piano-key" :scale="kb.scale" :class="ki==1||ki==3||ki==6||ki==8||ki==10 ? 'blackKey' : 'whiteKey'" :style="ki!=10 ? (ki!=8 ? (ki!=6 ? (ki!=3 ? (ki!=1 ? '' : (gi == 0 ? 'top:24px' : 'top:144px')) : 'top:120px') : 'top:72px') : 'top:48px') : 'top:24px'">{{kb.key}}</div>
       </div>
     </div>
   </div>
