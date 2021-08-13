@@ -159,6 +159,7 @@ window.pianist = function() {
       }
       for (var j = 0; j < Music[i].length; j++) {
         if (Music[i][j][0] != "-") {
+          createStyle(KeyMap[Music[i][j][0]][Music[i][j][1]], true)
           var MusicK = new Audio('./res/e-piano/' + KeyMap[Music[i][j][0]][Music[i][j][1]] + '.mp3');
           if (Music[i][j][2] != undefined) {
             MusicK.volume = Music[i][j][2] / 10;
@@ -167,7 +168,6 @@ window.pianist = function() {
             MusicK.volume = volumeLv;
             MusicK.play();
           }
-          createStyle(KeyMap[Music[i][j][0]][Music[i][j][1]], true)
         }
       }
       i++;

@@ -4,8 +4,7 @@ var Ver8 = 0; // KeyBoard ±Ver8
 
 // 效果还原
 function cleanAct() {
-  $(".piano-key").removeClass("WKActive");
-  $(".piano-key").removeClass("BKActive");
+  $(".piano-key").removeClass("WKActive BKActive");
 }
 
 // 取消激活样式
