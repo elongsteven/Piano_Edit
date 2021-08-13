@@ -1,16 +1,17 @@
 var volumeLv = 0.2;
-var player; // 打谱器
+var player; // Builder 打谱器
+var Ver8 = 0; // KeyBoard ±Ver8
 
-//载入声音文件
+// Upload Sound Files
 var PianoKey = new Array();
 for (var i = 1; i <= 88; i++) {
-  PianoKey[i] = new Audio('res/' + i + '.mp3');
+  PianoKey[i] = new Audio('./res/e-piano/' + i + '.mp3');
   PianoKey[i].preload = "auto";
 }
 
-window.pianist = function () {
-  var speed = 72; //以四分音符为准。每分钟演奏的速度
-  //构建键盘表
+window.pianist = function() {
+  var speed = 72; // It's based on the quarter note, The speed of playing per minute.
+  // Use The SquareArray To Create The KeyBoard
   var KeyMap = new Array();
   KeyMap["c"] = new Array();
   KeyMap["#c"] = new Array();
@@ -128,7 +129,7 @@ window.pianist = function () {
   KeyMap["ba"] = KeyMap["#g"];
   KeyMap["bb"] = KeyMap["#a"];
 
-  //打谱程序
+  // Program Of Music Build 打谱程序
   var i = 0;
   // setTimeout(function() {
   //   player = setInterval(function() {
@@ -165,7 +166,7 @@ window.pianist = function () {
           setTimeout(function() {
             $(".piano-key").removeClass("WKActive");
           }, 800)
-          var MusicK = new Audio('res/' + KeyMap[Music[i][j][0]][Music[i][j][1]] + '.mp3');
+          var MusicK = new Audio('./res/e-piano/' + KeyMap[Music[i][j][0]][Music[i][j][1]] + '.mp3');
           if (Music[i][j][2] != undefined) {
             MusicK.volume = Music[i][j][2] / 10;
             MusicK.play();
@@ -185,8 +186,6 @@ window.pianist = function () {
   return false;
 };
 
-var Ver8 = 0;
-
 // 效果还原
 function cleanAct() {
   $(".piano-key").removeClass("WKActive");
@@ -194,19 +193,25 @@ function cleanAct() {
 }
 
 // 键盘创建声音
-function createAudio(e) {
-  var pianoKeyboard = new Audio('res/' + e + '.mp3');
+function createAudio (key) {
+  if ($(".piano-key[scale=" + key + "]").hasClass("whiteKey")) {
+    $(".piano-key[scale=" + key + "]").addClass("WKActive");
+  } else {
+    $(".piano-key[scale=" + key + "]").addClass("BKActive")
+  }
+  var pianoKeyboard = new Audio('./res/e-piano/' + key + '.mp3');
   pianoKeyboard.volume = KeyboardVol;
-  $(".piano-key[scale=" + e + "]").addClass("BKActive");
+  pianoKeyboard.currentTime = 0;
+  pianoKeyboard.preload = "auto";
   pianoKeyboard.play();
 }
 
 // 取消激活样式
 function delStyle(e) {
-  $(".piano-key[scale=" + e + "]").removeClass("BKActive");
+  $(".piano-key[scale=" + e + "]").removeClass("BKActive WKActive");
 }
 
-var stop = function () {
+var stop = function() {
   clearInterval(player);
 }
 
@@ -221,7 +226,7 @@ document.addEventListener("keydown", function(e) {
   } else if (e.keyCode == 187 && KeyBind(80) + 12 <= 88) {
     Ver8 += 12;
     console.log(Ver8);
-  } else if (e.keyCode == 123){
+  } else if (e.keyCode == 123) {
     layer.msg('当你注视源代码时，源代码也在注释着你');
   }
   if (KeyBlocked.indexOf(e.keyCode) == -1 && pianoKeymap.indexOf(e.keyCode) != -1) {

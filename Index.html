@@ -6,13 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,Chrome=1" />
   <title>JS-Piano</title>
-  <!-- Public -->
-  <script src="./Public/jquery-3.6.0.js"></script>
-  <script src="./Public/vue.js"></script>
-  <link rel="stylesheet" href="./Public/component.css">
-  <link rel="stylesheet" href="./Public/blue-component.css">
-  <script src="./Public/layer/layer.js"></script>
-  <script src="./Public/JS-Piano.js"></script>
+  <!-- Library -->
+  <script src="./Library/jquery-3.6.0.js"></script>
+  <script src="./Library/vue.js"></script>
+  <link rel="stylesheet" href="./Library/component.css">
+  <link rel="stylesheet" href="./Library/blue-component.css">
+  <script src="./Library/layer/layer.js"></script>
+  <script src="./Library/JS-Piano.js"></script>
   <!-- Music_G -->
   <script src="./Music_G/su.js"></script>
   <style>
@@ -136,23 +136,21 @@
     // 按键判定
     $(".piano-key").mouseover(function() {
       if (isClick) {
-        Playing($(this));
+        createAudio($(this).attr('scale'));
       }
     });
 
-    // 琴键音效即触发效果
-    function Playing(ele) {
-      if (ele.hasClass("whiteKey")) {
-        ele.addClass("WKActive");
-      } else {
-        ele.addClass("BKActive");
-      }
-      var pianoKey = new Audio("res/" + ele.attr("scale") + ".mp3");
-      pianoKey.preload = "auto";
-      pianoKey.currentTime = 0;
-      pianoKey.volume = 0.2;
-      pianoKey.play();
-    }
+    // // 琴键音效即触发效果
+    // function Playing(ele) {
+    //   if (ele.hasClass("whiteKey")) {
+    //     ele.addClass("WKActive");
+    //   } else {
+    //     ele.addClass("BKActive");
+    //   }
+    //   var pianoKey = new Audio("res/e-piano/" + ele.attr("scale") + ".mp3");
+    //   pianoKey.volume = 0.2;
+    //   pianoKey.play();
+    // }
 
     var NavView;
     // 页面加载播放
@@ -163,14 +161,14 @@
         // "..."为spread运算符，ES6语法
         [...document.querySelectorAll('.piano-key')].forEach(function(item) {
           item.addEventListener('touchstart', function() {
-            Playing($(this));
+            createAudio($(this).attr('scale'));
           });
         });
       } else {
         // console.log("Pc");
         NavView = "pc";
         $(".piano-key").mousedown(function() {
-          Playing($(this));
+          createAudio($(this).attr('scale'));
         });
       }
     }
