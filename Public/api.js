@@ -178,7 +178,7 @@ window.pianist = function() {
   }, 3000);
   return false;
 };
-{{{}}} ((())) [[[]]]
+
 // 键盘创建声音
 function createAudio(key, musicalPath, FileType) {
   var musicalPath = musicalPath || './res/e-piano/';
