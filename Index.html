@@ -24,23 +24,25 @@
 <body>
   <div id="app">
     <div class="IDE">
+      <!-- 吸顶层 -->
       <div class="fixedTop"></div>
+      <!-- 内容包络 -->
       <div class="PianoBlock bc-flex" style="width:max-content;">
+        <!-- 吸边钢琴栏 -->
         <div class="fixedLeft piano-area bc-flex bc-flex-d-cr fs-none">
           <div v-for="(group,gi) in Piano" class="Ver8 bc-flex bc-flex-d-cr bc-flex-jc-c bc-flex-ai-s bc-t-999 bc-f-13rp ps-r" style="width:90px;">
-            <div v-for="(kb,ki) in group" class="piano-key" :scale="kb.scale" :class="ki==1||ki==3||ki==6||ki==8||ki==10 ? 'blackKey' : 'whiteKey'" :style="ki!=10 ? (ki!=8 ? (ki!=6 ? (ki!=3 ? (ki!=1 ? '' : (gi == 0 ? 'top:24px' : 'top:144px')) : 'top:120px') : 'top:72px') : 'top:48px') : 'top:24px'">{{kb.key}}</div>
+            <!-- 0 2 4 5 7 9 11 -->
+            <!-- 1 3 6 8 10 -->
+            <div v-for="(kb,ki) in group" class="piano-key" :scale="kb.scale" :class="ki==1||ki==3||ki==6||ki==8||ki==10 ? 'blackKey' : 'whiteKey'" :style="(ki==1||ki==3||ki==6||ki==8||ki==10 ? ('height:' + KeyWidth + 'px;line-height:' + KeyWidth + 'px;') : (gi==0 ? 'height:'+KeyWidth*1.5+'px;'+'line-height:'+KeyWidth*1.5+'px' : gi==8 ? 'height:'+KeyWidth+'px;'+'line-height:'+KeyWidth+'px' : (ki==2||ki==7||ki==9 ? ('height:' + KeyWidth*2 + 'px;line-height:' + KeyWidth*2 + 'px;') : ('height:' + KeyWidth*1.5 + 'px;line-height:' + KeyWidth*1.5 + 'px;')))) + 
+            (ki!=10 ? (ki!=8 ? (ki!=6 ? (ki!=3 ? (ki!=1 ? '' : (gi == 0 ? 'top:'+KeyWidth*1.5+'px' : 'top:'+KeyWidth*10.5+'px')) : 'top:'+KeyWidth*8.5+'px') : 'top:'+KeyWidth*5.5+'px') : 'top:'+KeyWidth*3.5+'px') : 'top:'+KeyWidth*1.5+'px;')">{{kb.key}}--{{gi}}</div>
           </div>
         </div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
-        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
+        <!-- IDE-Chart -->
+        <div class="IDE-Chart fs-none bc-flex">
+          <div class="charts">
+            <div v-for="(grid,index) in Chart" class="grid bc-t-999">{{index}}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -53,14 +55,30 @@
       },
       data: {
         Piano: E_PIANO,
+        Chart: [],
+        KeyWidth: 24,
       },
       mounted() {
+        var CHART = [];
+        E_PIANO.forEach(function(item) {
+          CHART = CHART.concat(item);
+        });
+        this.Chart = CHART.reverse();
+
+        E_PIANO.forEach(function(group, gi) {
+          group.forEach(function(key, ki) {
+            if (ki == 1 || ki == 3 || ki == 6 || ki == 8 || ki == 10) { // TODO: 不要在html中实时计算，在data中插值以便后期维护
+              key.area = this.KeyWidth;
+            }
+            console.log(key.key, ki);
+          });
+        });
         // window.pianist();
       },
     })
 
     setTimeout(function() {
-      $(".IDE-Chart").css('height', $(".piano-area").innerHeight());
+      $(".IDE-Chart").css('height', $(".piano-area").innerHeight()); // 表格层高度脚手架，框架完成后可删除
     })
 
     // 播放控制 Music
