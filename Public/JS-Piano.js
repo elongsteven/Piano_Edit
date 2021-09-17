@@ -50,6 +50,7 @@ function fileSaver(data, FileName) {
   saveAs(blob, FileName);
 }
 
+
 // 函数锁
 var KeyBlocked = [];
 var pianoKeymap = [90, 83, 88, 68, 67, 86, 71, 66, 72, 78, 74, 77, 81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80];

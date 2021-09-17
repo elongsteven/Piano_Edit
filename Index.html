@@ -23,9 +23,24 @@
 
 <body>
   <div id="app">
-    <div class="PianoBlock bc-flex bc-flex-d-cr">
-      <div v-for="(group,gi) in Piano" class="Ver8 bc-flex bc-flex-d-cr bc-flex-jc-c bc-flex-ai-s bc-t-999 bc-f-13rp ps-r" style="width:90px;">
-        <div v-for="(kb,ki) in group" class="piano-key" :scale="kb.scale" :class="ki==1||ki==3||ki==6||ki==8||ki==10 ? 'blackKey' : 'whiteKey'" :style="ki!=10 ? (ki!=8 ? (ki!=6 ? (ki!=3 ? (ki!=1 ? '' : (gi == 0 ? 'top:24px' : 'top:144px')) : 'top:120px') : 'top:72px') : 'top:48px') : 'top:24px'">{{kb.key}}</div>
+    <div class="IDE">
+      <div class="fixedTop"></div>
+      <div class="PianoBlock bc-flex" style="width:max-content;">
+        <div class="fixedLeft piano-area bc-flex bc-flex-d-cr fs-none">
+          <div v-for="(group,gi) in Piano" class="Ver8 bc-flex bc-flex-d-cr bc-flex-jc-c bc-flex-ai-s bc-t-999 bc-f-13rp ps-r" style="width:90px;">
+            <div v-for="(kb,ki) in group" class="piano-key" :scale="kb.scale" :class="ki==1||ki==3||ki==6||ki==8||ki==10 ? 'blackKey' : 'whiteKey'" :style="ki!=10 ? (ki!=8 ? (ki!=6 ? (ki!=3 ? (ki!=1 ? '' : (gi == 0 ? 'top:24px' : 'top:144px')) : 'top:120px') : 'top:72px') : 'top:48px') : 'top:24px'">{{kb.key}}</div>
+          </div>
+        </div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(63, 70, 80);"></div>
+        <div class="IDE-Chart fs-none" style="width: 300px;height: 1000px; background-color:rgb(150, 164, 182);"></div>
       </div>
     </div>
   </div>
@@ -42,7 +57,10 @@
       mounted() {
         // window.pianist();
       },
+    })
 
+    setTimeout(function() {
+      $(".IDE-Chart").css('height', $(".piano-area").innerHeight());
     })
 
     // 播放控制 Music

@@ -56,3 +56,28 @@
 .BKActive {
   background: lightskyblue;
 }
+
+.fixedTop {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 50px;
+  background-color: rgb(39, 56, 53);
+  z-index: 2;
+}
+
+.fixedLeft {
+  position: sticky;
+  left: 0;
+}
+
+.fs-none {
+  flex-shrink: 0;
+}
+
+.IDE {
+  width: 100vw;
+  height: 100vh;
+  overflow: scroll;
+}
