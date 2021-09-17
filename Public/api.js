@@ -5,6 +5,7 @@ for (var i = 1; i <= 88; i++) {
   PianoKey[i].preload = "auto";
 }
 
+// 创建KEYMAP API
 window.pianist = function() {
   var speed = 72; // It's based on the quarter note, The speed of playing per minute.
   // Use The SquareArray To Create The KeyBoard
