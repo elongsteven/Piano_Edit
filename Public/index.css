@@ -106,16 +106,3 @@
 .grid:last-child {
   border-bottom: 1px solid #888;
 }
-
-/* api类型 */
-.fs-none {
-  flex-shrink: 0;
-}
-
-.bs-bb {
-  box-sizing: border-box;
-}
-
-.bs-cb {
-  box-sizing: content-box;
-}

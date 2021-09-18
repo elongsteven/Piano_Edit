@@ -9,8 +9,7 @@
   <!-- Library -->
   <script src="./Library/jquery-3.6.0.js"></script>
   <script src="./Library/vue.js"></script>
-  <link rel="stylesheet" href="./Library/component.css">
-  <link rel="stylesheet" href="./Library/blue-component.css">
+  <link rel="stylesheet" href="./Library/e-project.css">
   <script src="./Library/layer/layer.js"></script>
   <script src="./Library/FileSaver/FileSaver.min.js"></script>
   <script src="./Public/api.js"></script>
@@ -25,22 +24,22 @@
   <div id="app">
     <div class="IDE">
       <!-- 吸顶层 -->
-      <div class="fixedTop bc-pd-l-16rp bs-bb bc-t-white">
-        键宽度：<input type="number" class="t-333" style="width:24px;" v-model="KeyWidth" @input="changeW">
+      <div class="fixedTop ep-pd-l-16rp ep-bs-bb ep-t-white">
+        键宽度：<input type="number" class="ep-t-333" style="width:24px;" v-model="KeyWidth" @input="changeW">
       </div>
       <!-- 内容包络 -->
-      <div class="PianoBlock bc-flex" style="width:max-content;">
+      <div class="PianoBlock ep-flex" style="width:max-content;">
         <!-- 吸边钢琴栏 -->
-        <div class="fixedLeft piano-area bc-flex bc-flex-d-cr fs-none">
-          <div v-for="(group,gi) in Piano" class="Ver8 bc-flex bc-flex-d-cr bc-flex-jc-c bc-flex-ai-s bc-t-999 bc-f-13rp ps-r" style="width:90px;">
+        <div class="fixedLeft piano-area ep-flex ep-flex-d-cr ep-flex-fs">
+          <div v-for="(group,gi) in Piano" class="Ver8 ep-flex ep-flex-d-cr ep-flex-jc-c ep-flex-ai-s ep-t-999 ep-f-13rp ep-ps-r" style="width:90px;">
             <!-- 0 2 4 5 7 9 11 -->
             <!-- 1 3 6 8 10 -->
             <div v-for="(kb,ki) in group" class="piano-key" :scale="kb.scale" :class="kb.type == 'B' ? 'blackKey' : 'whiteKey'" :style="kb.type == 'B' ? ('top:' + kb.offset + 'px;' + 'height:' + kb.area + 'px;line-height:' + kb.area + 'px;') : ('height:' + kb.area + 'px;line-height:' + kb.txtOS + 'px;')">{{kb.key}}</div>
           </div>
         </div>
         <!-- IDE-Chart -->
-        <div class="IDE-Chart fs-none bc-flex">
-          <div class="charts bc-flex" v-for="index of long">
+        <div class="IDE-Chart ep-flex-fs ep-flex">
+          <div class="charts ep-flex" v-for="index of long">
             <div class="steps" v-for="index of step">
               <div v-for="(grid,index) in Chart" class="grid" :class="(grid.type == 'B' ? 'gridB' : '') + (grid.groupEnd ? 'gE' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}">
                 <!-- {{grid.scale}} -->
