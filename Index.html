@@ -25,7 +25,10 @@
     <div class="IDE">
       <!-- 吸顶层 -->
       <div class="fixedTop ep-pd-l-16rp ep-bs-bb ep-t-white">
-        键宽度：<input type="number" class="ep-t-333" style="width:24px;" v-model="KeyWidth" @input="changeW">
+        键宽度：<input type="number" class="ep-t-333" style="width:36px;" v-model="KeyWidth" @input="changeW" /> 格宽度：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="gridWidth" @input="changeW" /> 节拍数：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="step" @input="changeW" /> 小节数：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="long" @input="changeW" />
       </div>
       <!-- 内容包络 -->
       <div class="PianoBlock ep-flex" style="width:max-content;">
@@ -71,6 +74,8 @@
       },
       methods: {
         changeW() {
+          console.log('step:', this.step);
+          console.log('long:', this.long);
           console.log(this.KeyWidth);
           this.updateData();
         },
@@ -134,6 +139,10 @@
           }.bind(this));
           // console.log(CHART);
           this.Chart = CHART.reverse();
+          this.$forceUpdate();
+        },
+        viewUpdate() {
+          console.log(5631354);
           this.$forceUpdate();
         }
       },
