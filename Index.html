@@ -42,7 +42,7 @@
         <div class="IDE-Chart fs-none bc-flex">
           <div class="charts bc-flex" v-for="index of long">
             <div class="steps" v-for="index of step">
-              <div v-for="(grid,index) in Chart" class="grid" :class="(grid.type == 'B' ? 'gridB' : '') + (grid.groupEnd ? 'gE' : '')" :style="'height:' + KeyWidth + 'px;'">
+              <div v-for="(grid,index) in Chart" class="grid" :class="(grid.type == 'B' ? 'gridB' : '') + (grid.groupEnd ? 'gE' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}">
                 <!-- {{grid.scale}} -->
               </div>
             </div>
@@ -62,8 +62,9 @@
         Piano: E_PIANO,
         Chart: [],
         KeyWidth: 21,
+        gridWidth: 40,
         step: 4,
-        long: 4,
+        long: 8,
       },
       mounted() {
         this.updateData();
@@ -132,7 +133,7 @@
             }.bind(this));
             CHART = CHART.concat(group); // 创建CHART表
           }.bind(this));
-          console.log(CHART);
+          // console.log(CHART);
           this.Chart = CHART.reverse();
           this.$forceUpdate();
         }
