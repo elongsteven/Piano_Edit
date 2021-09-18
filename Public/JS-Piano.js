@@ -71,6 +71,11 @@ document.addEventListener("keydown", function(e) {
   } else if (KeyBlocked.indexOf(e.keyCode) != -1 && pianoKeymap.indexOf(e.keyCode) != -1) {
     console.log("blocked");
   }
+  // 阻止Ctrl+S
+  if (e.ctrlKey == true && e.keyCode == 83) {
+    layer.msg('正在保存...');
+    e.preventDefault(); // 或者 return false;
+  }
 });
 
 document.addEventListener("keyup", function(e) {
@@ -194,9 +199,10 @@ function KeyBind(key) {
     case 123: // F12
       break;
 
+
       // 默认执行项
     default:
-      console.log("你按下的键对应的keyCode为： " + key, "该按键未定义");
+      console.log("未定义键：", key);
   }
   return pianoKey;
 }
