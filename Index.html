@@ -42,8 +42,8 @@
         </div>
         <!-- IDE-Chart -->
         <div class="IDE-Chart ep-flex-fs ep-flex">
-          <div class="charts ep-flex" v-for="index of long">
-            <div class="steps" v-for="index of step">
+          <div class="charts ep-flex" v-for="index of Number(long)">
+            <div class="steps" v-for="index of Number(step)">
               <div v-for="(grid,index) in Chart" class="grid" :class="(grid.type == 'B' ? 'gridB' : '') + (grid.groupEnd ? 'gE' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}">
                 <!-- {{grid.scale}} -->
               </div>
@@ -63,10 +63,10 @@
       data: {
         Piano: E_PIANO,
         Chart: [],
-        KeyWidth: 21,
-        gridWidth: 40,
-        step: 4,
-        long: 8,
+        KeyWidth: '21',
+        gridWidth: '40',
+        step: '4',
+        long: '8',
       },
       mounted() {
         this.updateData();
@@ -74,9 +74,6 @@
       },
       methods: {
         changeW() {
-          console.log('step:', this.step);
-          console.log('long:', this.long);
-          console.log(this.KeyWidth);
           this.updateData();
         },
         updateData() {
