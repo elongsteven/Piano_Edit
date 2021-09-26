@@ -6,8 +6,8 @@ for (var i = 1; i <= 88; i++) {
 }
 
 // 创建KEYMAP API
-window.pianist = function() {
-  var speed = 72; // It's based on the quarter note, The speed of playing per minute.
+window.pianist = function(M) {
+  var speed = M.speed; // It's based on the quarter note, The speed of playing per minute.
   // Use The SquareArray To Create The KeyBoard
   var KeyMap = new Array();
   KeyMap["C"] = new Array();
@@ -154,7 +154,8 @@ window.pianist = function() {
   //   }, 60000 / (speed * 8));
   // }, 1000);
 
-  setTimeout(function() {
+  setTimeout(function () {
+    var Music = M.staff;
     player = setInterval(function() {
       if (i >= Music.length) {
         return false;

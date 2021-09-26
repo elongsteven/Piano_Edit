@@ -25,10 +25,11 @@
     <div class="IDE">
       <!-- 吸顶层 -->
       <div class="fixedTop ep-pd-l-16rp ep-bs-bb ep-t-white">
-        键宽度：<input type="number" class="ep-t-333" style="width:36px;" v-model="KeyWidth" @input="changeW" /> 格宽度：
-        <input type="number" class="ep-t-333" style="width:36px;" v-model="gridWidth" @input="changeW" /> 节拍数：
-        <input type="number" class="ep-t-333" style="width:36px;" v-model="step" @input="changeW" /> 小节数：
-        <input type="number" class="ep-t-333" style="width:36px;" v-model="long" @input="changeW" />
+        键宽度：<input type="number" class="ep-t-333" style="width:36px;" v-model="KeyWidth" @change="KeyBoardUpdate" /> 格宽度：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="gridWidth" /> 节拍数：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="step" @change="ChartUpdate" /> 小节数：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="long" @change="ChartUpdate" /> BPM：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="movement.speed" />
       </div>
       <!-- 内容包络 -->
       <div class="PianoBlock ep-flex" style="width:max-content;">
@@ -65,22 +66,36 @@
         window.Editor = new Object;
       },
       data: {
-        Piano: E_PIANO,
-        Chart: [],
+        Piano: E_PIANO, // 键盘
+        Chart: [], // MIDI谱表
+        E_KEY: [], // 桥
         KeyWidth: '21',
         gridWidth: '40',
         step: '4',
         long: '4',
-        movement: [],
+        movement: { // 合成乐谱
+          speed: 120,
+          staff: [],
+        },
       },
       mounted() {
-        this.updateData();
-        // window.pianist();
+        // 播放控制 Music
+        // window.Music = Su;
+
+        // title 初始化
+        if (window.Music == Su) {
+          document.title = "溯"
+        } else if (window.Music != Su) {
+          document.title = "Piano.js"
+        }
+        this.KeyBoardUpdate();
+        this.ChartUpdate();
+        // window.pianist(Su);
       },
       methods: {
         doIt(ci, gi, chart) {
+          // TODO: 实现打谱与播放，需要拆分
           this.Chart[ci][gi].isPlay = !this.Chart[ci][gi].isPlay; // 改变选择态
-          console.log(this.Chart[ci][gi] === this.Chart[ci + 1][gi]); // TODO: 居然全等？！这代表我无论怎么改，都是改的同一个东西，也代表88键是同一个东西循环而来的，并非独立！靠北，见了鬼了...
           var groupArr = []; // 创建音元
           chart.forEach(function(item) {
             if (item.isPlay) {
@@ -92,22 +107,17 @@
             }
           })
           if (groupArr.length != 0) {
-            this.movement[ci] = groupArr;
+            this.movement.staff[ci] = groupArr;
           } else {
-            this.movement[ci] = ['-`']
+            this.movement.staff[ci] = ['-'];
           }
-          console.log(this.movement);
-          // console.log(groupArr);
-          // console.log(chart);
+          console.log(this.movement.staff);
+          // console.log(this.Chart[ci][gi] === this.Chart[ci + 1][gi]); // TODO: 居然全等？！这代表我无论怎么改，都是改的同一个东西，也代表88键是同一个东西循环而来的，并非独立！靠北，见了鬼了...
 
           this.$forceUpdate();
         },
-        changeW() {
-          this.updateData();
-        },
-        updateData() {
+        KeyBoardUpdate() {
           // TODO: 不要在html中实时计算，在data中插值以便后期维护
-          var CHART = [];
           E_PIANO.forEach(function(group, gi) { // 循环 组
             group.forEach(function(key, ki) { // 循环 键
               // 插入组值
@@ -167,26 +177,29 @@
                 }
               }
             }.bind(this));
-            CHART = CHART.concat(group).reverse(); // 创建CHART表
+            this.E_KEY = this.E_KEY.concat(group).reverse(); // 创建E_KEY表
           }.bind(this));
-
+          this.$forceUpdate();
+        },
+        ChartUpdate() {
+          var CHART = this.E_KEY;
           // 三改: 数组重构，防止出现野生指针问题
           var groups = [];
           for (var i = 0; i < this.long; i++) {
             var step = []
             for (var j = 0; j < this.step; j++) {
               var keyBoard = [];
-              for (var k = 0; k < CHART.length; k++) {
+              CHART.forEach((e, k) => {
                 var newObj = {};
+                newObj.stepTime = i * 4 + j + 1;
                 newObj.groupId = CHART[k].groupId;
                 newObj.isPlay = CHART[k].isPlay;
-                newObj.key = CHART[k].key;
                 newObj.scale = CHART[k].scale;
                 newObj.voice = CHART[k].voice;
                 newObj.type = CHART[k].type;
-                newObj.stepTime = i * 4 + j + 1;
+                newObj.key = CHART[k].key;
                 keyBoard.push(newObj);
-              }
+              });
               step.push(keyBoard);
             }
             groups = groups.concat(step);
@@ -195,28 +208,17 @@
 
           // 创建空表 将来可能会废弃
           groups.forEach(function(item, index) {
-            this.movement.push(['-']);
+            this.movement.staff.push(['-']);
           }.bind(this))
 
           this.$forceUpdate();
         },
-        viewUpdate() {
-          console.log(5631354);
-          this.$forceUpdate();
+        updateData() {
+
         },
         debugger(data) {}
       },
     })
-
-    // 播放控制 Music
-    var Music = Su;
-
-    // title 初始化
-    if (Music == Su) {
-      document.title = "溯"
-    } else if (Music != Su) {
-      document.title = "Piano.js"
-    }
 
     var isClick = false;
     // 按键判定前置
