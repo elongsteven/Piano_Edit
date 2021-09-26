@@ -52,7 +52,7 @@
         </div> -->
         <!-- 二改 -->
         <div class="IDE-Chart ep-flex-fs ep-flex">
-          <div v-for="(chart,indexC) in Chart" :key="indexC" class="charts-nd ep-flex ep-flex-d-c" :class="((indexC / Number(step)) % 2 >= 1 ? 'charts-bg0 ' : 'charts-bg1 ') + ((indexC / Number(step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(step)) % 2 == 0 ? 'cutLine' : ''))">
+          <div v-for="(chart,indexC) in Chart" :key="indexC" class="charts-nd ep-flex ep-flex-d-c ep-f-10rp" :class="((indexC / Number(step)) % 2 >= 1 ? 'charts-bg0 ' : 'charts-bg1 ') + ((indexC / Number(step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(step)) % 2 == 0 ? 'cutLine' : ''))"><!-- {{indexC}} -->
             <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click="doIt(indexC,indexG,chart)">
               <!-- {{grid.groupId}} -->
             </div>

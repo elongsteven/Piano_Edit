@@ -124,13 +124,13 @@ KeyMap["bG"] = KeyMap["#F"];
 KeyMap["bA"] = KeyMap["#G"];
 KeyMap["bB"] = KeyMap["#A"];
 
-window.pianist = function(M, outTime) {
+window.pianist = function(M, outTime, i) {
   stop();
   if (!outTime) outTime = 0;
+  if (!i) i = 0;
   var speed = M.speed; // It's based on the quarter note, The speed of playing per minute.
 
   // Program Of Music Build 打谱程序
-  var i = 0;
   // setTimeout(function() {
   //   player = setInterval(function() {
   //     if (i >= Music.length) {
@@ -213,3 +213,11 @@ function createStyle(key, autoClean, time) {
     }, time)
   }
 }
+
+console.groupCollapsed("欢迎使用Piano.js");
+console.log('当前版本号: Beta 0.5.06');
+console.groupCollapsed("版本号重要功能预告：");
+console.log("Beta 0.6: 刻度与实时播放进度，纵向高亮");
+console.log("Beta 0.7: 播放刻度调整面板");
+console.groupEnd();
+console.groupEnd();
