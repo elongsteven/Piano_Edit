@@ -79,6 +79,10 @@
   border-right: 1px double #aaa;
 }
 
+.charts-nd {
+  height: 100%;
+}
+
 .charts:nth-child(2n-1) {
   background-color: rgb(78, 87, 104);
 }
@@ -105,4 +109,20 @@
 
 .grid:last-child {
   border-bottom: 1px solid #888;
+}
+
+.gridAct {
+  background-color: rgba(0, 211, 200, 0.8);
+}
+
+.charts-bg0 {
+  background-color: rgb(78, 87, 104);
+}
+
+.charts-bg1 {
+  background-color: rgb(111, 125, 134);
+}
+
+.cutLine {
+  border-left: 1px double #aaa;
 }

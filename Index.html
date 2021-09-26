@@ -41,13 +41,17 @@
           </div>
         </div>
         <!-- IDE-Chart -->
-        <div class="IDE-Chart ep-flex-fs ep-flex">
-          <div class="charts ep-flex" v-for="index of Number(long)">
-            <div class="steps" v-for="index of Number(step)">
-              <div v-for="(grid,index) in Chart" class="grid" :class="(grid.type == 'B' ? 'gridB' : '') + (grid.groupEnd ? 'gE' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}">
-                <!-- {{grid.scale}} -->
-              </div>
+        <!-- <div class="IDE-Chart ep-flex-fs ep-flex">
+          <div class="charts ep-flex" v-for="indexC of Number(long)">
+            <div class="steps" v-for="indexS of Number(step)">
+              <div v-for="(grid,indexG) in Chart" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click="doIt(indexC,indexS,grid,Chart)"></div>
             </div>
+          </div>
+        </div> -->
+        <!-- 二改 -->
+        <div class="IDE-Chart ep-flex-fs ep-flex">
+          <div v-for="(chart,indexC) in Chart" :key="indexC" class="charts-nd ep-flex ep-flex-d-c" :class="((indexC / Number(step)) % 2 >= 1 ? 'charts-bg0 ' : 'charts-bg1 ') + ((indexC / Number(step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(step)) % 2 == 0 ? 'cutLine' : ''))">
+            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click="doIt(indexC,indexG,chart)"></div>
           </div>
         </div>
       </div>
@@ -66,13 +70,38 @@
         KeyWidth: '21',
         gridWidth: '40',
         step: '4',
-        long: '8',
+        long: '4',
+        movement: [],
       },
       mounted() {
         this.updateData();
         // window.pianist();
       },
       methods: {
+        doIt(ci, gi, chart) {
+          this.Chart[ci][gi].isPlay = !this.Chart[ci][gi].isPlay; // 改变选择态
+          console.log(this.Chart[ci][gi] === this.Chart[ci + 1][gi]); // TODO: 居然全等？！这代表我无论怎么改，都是改的同一个东西，也代表88键是同一个东西循环而来的，并非独立！靠北，见了鬼了...
+          var groupArr = []; // 创建音元
+          chart.forEach(function(item) {
+            if (item.isPlay) {
+              var arr = [];
+              arr.push(item.key);
+              arr.push(item.groupId);
+              arr.push(item.voice);
+              groupArr.push(arr);
+            }
+          })
+          if (groupArr.length != 0) {
+            this.movement[ci] = groupArr;
+          } else {
+            this.movement[ci] = ['-`']
+          }
+          console.log(this.movement);
+          // console.log(groupArr);
+          // console.log(chart);
+
+          this.$forceUpdate();
+        },
         changeW() {
           this.updateData();
         },
@@ -81,6 +110,12 @@
           var CHART = [];
           E_PIANO.forEach(function(group, gi) { // 循环 组
             group.forEach(function(key, ki) { // 循环 键
+              // 插入组值
+              key.groupId = gi;
+              // 插入默认状态
+              key.isPlay = false;
+              key.voice = 0.5;
+
               // 白键动态宽度
               if (ki == 1 || ki == 3 || ki == 6 || ki == 8 || ki == 10) { // 黑键专区
                 key.type = 'B';
@@ -132,16 +167,44 @@
                 }
               }
             }.bind(this));
-            CHART = CHART.concat(group); // 创建CHART表
+            CHART = CHART.concat(group).reverse(); // 创建CHART表
           }.bind(this));
-          // console.log(CHART);
-          this.Chart = CHART.reverse();
+
+          // 三改: 数组重构，防止出现野生指针问题
+          var groups = [];
+          for (var i = 0; i < this.long; i++) {
+            var step = []
+            for (var j = 0; j < this.step; j++) {
+              var keyBoard = [];
+              for (var k = 0; k < CHART.length; k++) {
+                var newObj = {};
+                newObj.groupId = CHART[k].groupId;
+                newObj.isPlay = CHART[k].isPlay;
+                newObj.key = CHART[k].key;
+                newObj.scale = CHART[k].scale;
+                newObj.voice = CHART[k].voice;
+                newObj.type = CHART[k].type;
+                newObj.stepTime = i * 4 + j + 1;
+                keyBoard.push(newObj);
+              }
+              step.push(keyBoard);
+            }
+            groups = groups.concat(step);
+          }
+          this.Chart = groups;
+
+          // 创建空表 将来可能会废弃
+          groups.forEach(function(item, index) {
+            this.movement.push(['-']);
+          }.bind(this))
+
           this.$forceUpdate();
         },
         viewUpdate() {
           console.log(5631354);
           this.$forceUpdate();
-        }
+        },
+        debugger(data) {}
       },
     })
 
