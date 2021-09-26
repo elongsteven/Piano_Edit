@@ -6,7 +6,8 @@ for (var i = 1; i <= 88; i++) {
 }
 
 // 创建KEYMAP API
-window.pianist = function(M) {
+window.pianist = function(M, outTime) {
+  if (!outTime) outTime = 0;
   var speed = M.speed; // It's based on the quarter note, The speed of playing per minute.
   // Use The SquareArray To Create The KeyBoard
   var KeyMap = new Array();
@@ -154,10 +155,12 @@ window.pianist = function(M) {
   //   }, 60000 / (speed * 8));
   // }, 1000);
 
-  setTimeout(function () {
+  setTimeout(function() {
     var Music = M.staff;
     player = setInterval(function() {
       if (i >= Music.length) {
+        stop();
+        console.log('The END');
         return false;
       }
       for (var j = 0; j < Music[i].length; j++) {
@@ -174,11 +177,12 @@ window.pianist = function(M) {
         }
       }
       i++;
+      /* 音符调试处 */
       // if (i >= 8) {
       //   stop();
       // }
     }, 60000 / (speed * 8));
-  }, 3000);
+  }, outTime);
   return false;
 };
 
