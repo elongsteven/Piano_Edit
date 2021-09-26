@@ -30,6 +30,7 @@
         <input type="number" class="ep-t-333" style="width:36px;" v-model="step" @change="ChartUpdate" /> 小节数：
         <input type="number" class="ep-t-333" style="width:36px;" v-model="long" @change="ChartUpdate" /> BPM：
         <input type="number" class="ep-t-333" style="width:36px;" v-model="movement.speed" />
+        <button @click="player">播放</button>
       </div>
       <!-- 内容包络 -->
       <div class="PianoBlock ep-flex" style="width:max-content;">
@@ -52,7 +53,9 @@
         <!-- 二改 -->
         <div class="IDE-Chart ep-flex-fs ep-flex">
           <div v-for="(chart,indexC) in Chart" :key="indexC" class="charts-nd ep-flex ep-flex-d-c" :class="((indexC / Number(step)) % 2 >= 1 ? 'charts-bg0 ' : 'charts-bg1 ') + ((indexC / Number(step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(step)) % 2 == 0 ? 'cutLine' : ''))">
-            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click="doIt(indexC,indexG,chart)"></div>
+            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click="doIt(indexC,indexG,chart)">
+              <!-- {{grid.groupId}} -->
+            </div>
           </div>
         </div>
       </div>
@@ -104,6 +107,7 @@
               arr.push(item.groupId);
               arr.push(item.voice);
               groupArr.push(arr);
+              console.log(arr);
             }
           })
           if (groupArr.length != 0) {
@@ -111,10 +115,13 @@
           } else {
             this.movement.staff[ci] = ['-'];
           }
-          console.log(this.movement.staff);
+          // console.log(this.movement.staff);
           // console.log(this.Chart[ci][gi] === this.Chart[ci + 1][gi]); // TODO: 居然全等？！这代表我无论怎么改，都是改的同一个东西，也代表88键是同一个东西循环而来的，并非独立！靠北，见了鬼了...
 
           this.$forceUpdate();
+        },
+        player() {
+          window.pianist(this.movement);
         },
         KeyBoardUpdate() {
           // TODO: 不要在html中实时计算，在data中插值以便后期维护
@@ -177,12 +184,12 @@
                 }
               }
             }.bind(this));
-            this.E_KEY = this.E_KEY.concat(group).reverse(); // 创建E_KEY表
+            this.E_KEY = this.E_KEY.concat(group); // 创建E_KEY表
           }.bind(this));
           this.$forceUpdate();
         },
         ChartUpdate() {
-          var CHART = this.E_KEY;
+          var CHART = this.E_KEY.reverse();
           // 三改: 数组重构，防止出现野生指针问题
           var groups = [];
           for (var i = 0; i < this.long; i++) {
