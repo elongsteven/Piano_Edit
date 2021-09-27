@@ -1,4 +1,3 @@
-var volumeLv = 0.2;
 var player; // Builder 打谱器
 var Ver8 = 0; // KeyBoard ±Ver8
 

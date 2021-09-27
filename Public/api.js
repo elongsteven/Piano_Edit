@@ -129,6 +129,8 @@ window.pianist = function(M, outTime, i) {
   if (!outTime) outTime = 0;
   if (!i) i = 0;
   var speed = M.speed; // It's based on the quarter note, The speed of playing per minute.
+  var Music = M.staff;
+  var Volume = M.volume;
 
   // Program Of Music Build 打谱程序
   // setTimeout(function() {
@@ -157,13 +159,15 @@ window.pianist = function(M, outTime, i) {
   // }, 1000);
 
   setTimeout(function() {
-    var Music = M.staff;
     player = setInterval(function() {
       if (i >= Music.length) {
         stop();
+        i = 0;
+        vm.timeAct = i; // 设置播放交互
         console.log('The END');
         return false;
       }
+      vm.timeAct = i; // 设置播放交互
       for (var j = 0; j < Music[i].length; j++) {
         if (Music[i][j][0] != "-") {
           createStyle(KeyMap[Music[i][j][0]][Music[i][j][1]], true)
@@ -172,11 +176,12 @@ window.pianist = function(M, outTime, i) {
             MusicK.volume = Music[i][j][2] / 10;
             MusicK.play();
           } else {
-            MusicK.volume = volumeLv;
+            MusicK.volume = Volume;
             MusicK.play();
           }
         }
       }
+      // “发条”
       i++;
       /* 音符调试处 */
       // if (i >= 8) {
@@ -214,10 +219,11 @@ function createStyle(key, autoClean, time) {
   }
 }
 
-console.groupCollapsed("欢迎使用Piano.js");
-console.log('当前版本号: Beta 0.5.06');
+console.groupCollapsed("欢迎来到Piano.js");
+console.log('当前版本号: Beta 0.7');
 console.groupCollapsed("版本号重要功能预告：");
-console.log("Beta 0.6: 刻度与实时播放进度，纵向高亮");
-console.log("Beta 0.7: 播放刻度调整面板");
+console.log("Beta 0.8: 播放刻度调整面板");
+console.log("Beta 0.9: 增加保存功能");
+console.log("Ver 1.0: 增加读取功能，并在MIDI面板中渲染乐谱。此版本将成为【正式发布版】");
 console.groupEnd();
 console.groupEnd();

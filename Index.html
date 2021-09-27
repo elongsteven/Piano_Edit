@@ -29,7 +29,8 @@
         <input type="number" class="ep-t-333" style="width:36px;" v-model="gridWidth" /> 节拍数：
         <input type="number" class="ep-t-333" style="width:36px;" v-model="step" @change="ChartUpdate" /> 小节数：
         <input type="number" class="ep-t-333" style="width:36px;" v-model="long" @change="ChartUpdate" /> BPM：
-        <input type="number" class="ep-t-333" style="width:36px;" v-model="movement.speed" />
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="movement.speed" /> 默认音量：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="almostVolume" @change="rectify" />
         <button @click="player">播放</button>
       </div>
       <!-- 内容包络 -->
@@ -52,8 +53,10 @@
         </div> -->
         <!-- 二改 -->
         <div class="IDE-Chart ep-flex-fs ep-flex">
-          <div v-for="(chart,indexC) in Chart" :key="indexC" class="charts-nd ep-flex ep-flex-d-c ep-f-10rp" :class="((indexC / Number(step)) % 2 >= 1 ? 'charts-bg0 ' : 'charts-bg1 ') + ((indexC / Number(step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(step)) % 2 == 0 ? 'cutLine' : ''))"><!-- {{indexC}} -->
-            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click="doIt(indexC,indexG,chart)">
+          <div v-for="(chart,indexC) in Chart" :key="indexC" class="charts-nd ep-flex ep-flex-d-c ep-f-10rp" :class="((indexC / Number(step)) % 2 >= 1 ? (timeAct == indexC ? 'timeAct0 ' : 'charts-bg0 ') : (timeAct == indexC ? 'timeAct1 ' : 'charts-bg1 ')) + ((indexC / Number(step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(step)) % 2 == 0 ? 'cutLine' : ''))"
+            :style="">{{indexC}}
+            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click="doIt(indexC,indexG,chart)"
+              @contextmenu.prevent="setKey(indexC,indexG,chart)">
               <!-- {{grid.groupId}} -->
             </div>
           </div>
@@ -76,10 +79,13 @@
         gridWidth: '40',
         step: '4',
         long: '4',
+        almostVolume: 70,
         movement: { // 合成乐谱
           speed: 60,
+          volume: 0.7,
           staff: [],
         },
+        timeAct: 0,
       },
       mounted() {
         // 播放控制 Music
@@ -98,14 +104,13 @@
       methods: {
         doIt(ci, gi, chart) {
           // TODO: 实现打谱与播放，需要拆分
-          this.Chart[ci][gi].isPlay = !this.Chart[ci][gi].isPlay; // 改变选择态
+          chart[gi].isPlay = !chart[gi].isPlay; // 改变选择态
           var groupArr = []; // 创建音元
           chart.forEach(function(item) {
             if (item.isPlay) {
               var arr = [];
               arr.push(item.key);
               arr.push(item.groupId);
-              arr.push(item.voice);
               groupArr.push(arr);
               // console.log(arr); // DEBUG
             }
@@ -120,8 +125,37 @@
 
           this.$forceUpdate();
         },
+        setKey(ci, gi, chart) {
+          if (chart[gi].isPlay) {
+            var msc = this.movement.staff[ci];
+            // 在多维数组中寻找指定项，实现定向修改
+            msc.forEach(function(item) {
+              if (item.indexOf(chart[gi].key) != -1 && item.indexOf(chart[gi].groupId) != -1) {
+                layer.prompt({
+                  title: '设置音量 0 ~ 100  (当前:' + (item[2] == undefined ? '读取默认音量[' + vm.almostVolume + ']' : item[2] * 100) + ')',
+                  formType: 3
+                }, function(vol, index) {
+                  vol = vol.replace(/\D/g, '');
+                  console.log(vol);
+                  layer.close(index); // 关闭上一个弹窗
+                  // 限制 0 ~ 100
+                  if (vol > 100) vol = 100;
+                  if (vol < 0) vol = 0;
+                  vol = Number((vol / 100).toFixed(2)); // 换算为 0 ~ 1, 保留两位小数
+                  if (!isNaN(vol)) { // 判断非NaN, 写入staff MIDI音量控制器
+                    item.splice(2, 1, vol);
+                    console.log(item);
+                  }
+                });
+              }
+            })
+          }
+        },
         player() {
           window.pianist(this.movement);
+        },
+        rectify() {
+          this.movement.Volume = Number((this.almostVolume / 100).toFixed(2));
         },
         KeyBoardUpdate() {
           // TODO: 不要在html中实时计算，在data中插值以便后期维护
@@ -131,7 +165,6 @@
               key.groupId = gi;
               // 插入默认状态
               key.isPlay = false;
-              key.voice = 0.5;
 
               // 白键动态宽度
               if (ki == 1 || ki == 3 || ki == 6 || ki == 8 || ki == 10) { // 黑键专区
@@ -189,7 +222,7 @@
           this.$forceUpdate();
         },
         ChartUpdate() {
-          var CHART = this.E_KEY.reverse();
+          var CHART = [...this.E_KEY].reverse();
           // 三改: 数组重构，防止出现野生指针问题
           var groups = [];
           for (var i = 0; i < this.long; i++) {
@@ -202,7 +235,6 @@
                 newObj.groupId = CHART[k].groupId;
                 newObj.isPlay = CHART[k].isPlay;
                 newObj.scale = CHART[k].scale;
-                newObj.voice = CHART[k].voice;
                 newObj.type = CHART[k].type;
                 newObj.key = CHART[k].key;
                 keyBoard.push(newObj);
@@ -265,6 +297,11 @@
           createAudio($(this).attr('scale'));
         });
       }
+
+      //去掉默认的contextmenu事件，否则会和右键事件同时出现。
+      // document.oncontextmenu = function(e) {
+      //   e.preventDefault();
+      // };
     }
     var KeyboardVol = 0.3;
   </script>
