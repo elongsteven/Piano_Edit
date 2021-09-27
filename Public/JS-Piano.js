@@ -54,7 +54,7 @@ function fileSaver(data, FileName) {
 var KeyBlocked = [];
 var pianoKeymap = [90, 83, 88, 68, 67, 86, 71, 66, 72, 78, 74, 77, 81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80];
 
-document.addEventListener("keydown", function(e) {
+document.addEventListener("keydown", function (e) {
   if (e.keyCode == 189 && KeyBind(90) - 12 >= 1) {
     Ver8 -= 12;
     console.log(Ver8);
@@ -71,7 +71,7 @@ document.addEventListener("keydown", function(e) {
     console.log("blocked");
   }
   // 阻止Ctrl+S
-  if (e.ctrlKey == true && e.keyCode == 83) {
+  if (e.ctrlKey && e.keyCode == 83) {
     layer.msg('正在保存...');
     e.preventDefault(); // 或者 return false;
   }
@@ -84,11 +84,17 @@ document.addEventListener("keydown", function(e) {
       vm.stopped();
     }
   }
+  if (e.ctrlKey && e.altKey) {
+    vm.showTime = true;
+  }
 });
 
 document.addEventListener("keyup", function(e) {
   delStyle(KeyBind(e.keyCode))
   KeyBlocked.remove(e.keyCode);
+  if (e.key == 'Alt') {
+    vm.showTime = false;
+  }
 });
 
 // Arr.remove(st);

@@ -57,6 +57,7 @@
             @click.stop="selTime(indexC)">{{indexC}}
             <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click.stop="MIDI(indexC,indexG,chart,$event)"
               @contextmenu.prevent="setKey(indexC,indexG,chart)">
+              <span v-show="showTime">{{indexC}}</span>
               <!-- {{grid.groupId}} -->
             </div>
           </div>
@@ -72,7 +73,7 @@
         window.Editor = new Object;
       },
       data: {
-        Piano: E_PIANO, // 键盘
+        Piano: E_PIANO, // 键盘 
         Chart: [], // MIDI谱表
         E_KEY: [], // 桥
         KeyWidth: '21',
@@ -88,6 +89,7 @@
         timeAct: 0, // 播放进度刻度
         playing: false,
         keyCodeDebug: false,
+        showTime: false, // 刻度显示
       },
       mounted() {
         // 播放控制 Music
