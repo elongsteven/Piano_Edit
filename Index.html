@@ -54,8 +54,8 @@
         <!-- 二改 -->
         <div class="IDE-Chart ep-flex-fs ep-flex">
           <div v-for="(chart,indexC) in Chart" :key="indexC" class="charts-nd ep-flex ep-flex-d-c ep-f-10rp" :class="((indexC / Number(step)) % 2 >= 1 ? (timeAct == indexC ? 'timeAct0 ' : 'charts-bg0 ') : (timeAct == indexC ? 'timeAct1 ' : 'charts-bg1 ')) + ((indexC / Number(step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(step)) % 2 == 0 ? 'cutLine' : ''))"
-            :style="">{{indexC}}
-            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click="doIt(indexC,indexG,chart)"
+            @click.stop="selTime(indexC)">{{indexC}}
+            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click.stop="MIDI(indexC,indexG,chart,$event)"
               @contextmenu.prevent="setKey(indexC,indexG,chart)">
               <!-- {{grid.groupId}} -->
             </div>
@@ -85,7 +85,9 @@
           volume: 0.7,
           staff: [],
         },
-        timeAct: 0,
+        timeAct: 0, // 播放进度刻度
+        playing: false,
+        keyCodeDebug: false,
       },
       mounted() {
         // 播放控制 Music
@@ -99,10 +101,14 @@
         }
         this.KeyBoardUpdate();
         this.ChartUpdate();
-        // window.pianist(Su,3000);
+        // window.pianist(Su,0,3000);
       },
       methods: {
-        doIt(ci, gi, chart) {
+        MIDI(ci, gi, chart, E) {
+          if (E.altKey) {
+            this.selTime(ci);
+            return false;
+          }
           // TODO: 实现打谱与播放，需要拆分
           chart[gi].isPlay = !chart[gi].isPlay; // 改变选择态
           var groupArr = []; // 创建音元
@@ -152,10 +158,18 @@
           }
         },
         player() {
-          window.pianist(this.movement);
+          window.pianist(this.movement, this.timeAct);
+          this.playing = true;
+        },
+        stopped() {
+          window.stop();
+          this.playing = false;
         },
         rectify() {
           this.movement.Volume = Number((this.almostVolume / 100).toFixed(2));
+        },
+        selTime(index) {
+          this.timeAct = index;
         },
         KeyBoardUpdate() {
           // TODO: 不要在html中实时计算，在data中插值以便后期维护

@@ -124,7 +124,7 @@ KeyMap["bG"] = KeyMap["#F"];
 KeyMap["bA"] = KeyMap["#G"];
 KeyMap["bB"] = KeyMap["#A"];
 
-window.pianist = function(M, outTime, i) {
+window.pianist = function(M, i, outTime) {
   stop();
   if (!outTime) outTime = 0;
   if (!i) i = 0;
@@ -220,9 +220,8 @@ function createStyle(key, autoClean, time) {
 }
 
 console.groupCollapsed("欢迎来到Piano.js");
-console.log('当前版本号: Beta 0.7');
+console.log('当前版本号: Beta 0.8.1');
 console.groupCollapsed("版本号重要功能预告：");
-console.log("Beta 0.8: 播放刻度调整面板");
 console.log("Beta 0.9: 增加保存与读取功能");
 console.log("Ver 1.0: 读取时在MIDI面板中渲染乐谱、自动填充等功能实现。此版本将成为【正式发布版】");
 console.groupEnd();

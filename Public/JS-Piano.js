@@ -11,7 +11,7 @@ function delStyle(e) {
   $(".piano-key[scale=" + e + "]").removeClass("BKActive WKActive");
 }
 
-var stop = function() {
+window.stop = function() {
   clearInterval(player);
 }
 
@@ -74,6 +74,15 @@ document.addEventListener("keydown", function(e) {
   if (e.ctrlKey == true && e.keyCode == 83) {
     layer.msg('正在保存...');
     e.preventDefault(); // 或者 return false;
+  }
+  // 空格
+  if (e.keyCode == 32) {
+    e.preventDefault(); // 或者 return false;
+    if (!vm.playing) {
+      vm.player();
+    } else {
+      vm.stopped();
+    }
   }
 });
 
@@ -201,7 +210,9 @@ function KeyBind(key) {
 
       // 默认执行项
     default:
-      console.log("未定义键：", key);
+      if (vm.keyCodeDebug) {
+        console.log("未定义键：", key);
+      }
   }
   return pianoKey;
 }
