@@ -220,9 +220,10 @@ function createStyle(key, autoClean, time) {
 }
 
 console.groupCollapsed("欢迎来到Piano.js");
-console.log('当前版本号: Beta 0.8.2');
+console.log('当前版本号: Ver 1.0.0');
+console.log('已初步完成所有的预期功能');
 console.groupCollapsed("版本号重要功能预告：");
-console.log("Beta 0.9: 增加保存与读取功能");
-console.log("Ver 1.0: 读取时在MIDI面板中渲染乐谱、自动填充等功能实现。此版本将成为【正式发布版】");
+console.log("Ver 1.1: 添加更换MIDI标记颜色功能");
+console.log("Ver 1.2: 实现MIDI标记颜色独立，保存与读取时不受当前工作区影响");
 console.groupEnd();
 console.groupEnd();

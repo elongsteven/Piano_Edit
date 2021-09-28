@@ -179,6 +179,7 @@
           this.timeAct = index;
         },
         KeyBoardUpdate() {
+          this.E_KEY = [];
           // TODO: 不要在html中实时计算，在data中插值以便后期维护
           E_PIANO.forEach(function(group, gi) { // 循环 组
             group.forEach(function(key, ki) { // 循环 键
@@ -278,8 +279,7 @@
           window.fileLoader();
         },
         updateMIDI(MIDI) {
-          this.movement = {...MIDI
-          };
+          this.movement = {...MIDI};
           this.ChartUpdate();
           MIDI.staff.forEach(function(item, index) {
             if (item[0] != '-') { // 先过滤掉空
