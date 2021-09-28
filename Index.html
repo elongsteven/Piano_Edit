@@ -278,7 +278,7 @@
         readProject() {
           window.fileLoader();
         },
-        updateMIDI(MIDI) {
+        updateMIDI(MIDI) { // MIDI乐谱渲染主控器
           this.movement = {...MIDI};
           this.ChartUpdate();
           MIDI.staff.forEach(function(item, index) {

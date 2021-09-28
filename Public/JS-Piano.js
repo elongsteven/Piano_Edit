@@ -16,7 +16,7 @@ window.stop = function() {
 }
 
 
-/* JSON Localhost S/L */
+/* JSON Localhost S/L  JSON本地文件读取与保存 核心控制器 */
 window.fileLoader = function() {
   var selectedFile = document.getElementById("files").files[0]; //获取读取的File对象
   var name = selectedFile.name; //读取选中文件的文件名
