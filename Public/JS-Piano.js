@@ -17,7 +17,7 @@ window.stop = function() {
 
 
 /* JSON Localhost S/L */
-function fileLoader() {
+window.fileLoader = function() {
   var selectedFile = document.getElementById("files").files[0]; //获取读取的File对象
   var name = selectedFile.name; //读取选中文件的文件名
   var size = selectedFile.size; //读取选中文件的大小
@@ -30,19 +30,22 @@ function fileLoader() {
 
     console.log("读取结果转为JSON：");
     let json = JSON.parse(this.result);
-    console.log(json);
+    console.log('json',json);
+
+    vm.updateMIDI(json)
   };
 }
 
-function fileSaver(data, FileName) {
+window.fileSaver = function(data, FileName) {
   if (!data || typeof data == 'function') {
-    alert("无效数据！");
+    layer.msg("无效数据！");
     return false;
   }
   if (!FileName) FileName = "save.json";
   if (FileName.indexOf(".json") == -1) FileName = FileName + ".json";
-
   var content = JSON.stringify(data);
+  console.log('data:', data);
+  console.log('content:', content);
   var blob = new Blob([content], {
     type: "text/plain;charset=utf-8"
   });
@@ -54,7 +57,7 @@ function fileSaver(data, FileName) {
 var KeyBlocked = [];
 var pianoKeymap = [90, 83, 88, 68, 67, 86, 71, 66, 72, 78, 74, 77, 81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80];
 
-document.addEventListener("keydown", function (e) {
+document.addEventListener("keydown", function(e) {
   if (e.keyCode == 189 && KeyBind(90) - 12 >= 1) {
     Ver8 -= 12;
     console.log(Ver8);
@@ -74,6 +77,7 @@ document.addEventListener("keydown", function (e) {
   if (e.ctrlKey && e.keyCode == 83) {
     layer.msg('正在保存...');
     e.preventDefault(); // 或者 return false;
+    vm.saveProject();
   }
   // 空格
   if (e.keyCode == 32) {

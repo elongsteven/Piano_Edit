@@ -10,14 +10,7 @@
   <script src="./Library/jquery-3.6.0.js"></script>
   <script src="./Library/vue.js"></script>
   <link rel="stylesheet" href="./Library/e-project.css">
-  <script src="./Library/layer/layer.js"></script>
-  <script src="./Library/FileSaver/FileSaver.min.js"></script>
-  <script src="./Public/api.js"></script>
-  <script src="./Public/JS-Piano.js"></script>
-  <script src="./res/instruments.js"></script>
   <link rel="stylesheet" href="./Public/index.css">
-  <!-- Music_G -->
-  <script src="./Music_G/su.js"></script>
 </head>
 
 <body>
@@ -25,13 +18,16 @@
     <div class="IDE">
       <!-- 吸顶层 -->
       <div class="fixedTop ep-pd-l-16rp ep-bs-bb ep-t-white">
-        键宽度：<input type="number" class="ep-t-333" style="width:36px;" v-model="KeyWidth" @change="KeyBoardUpdate" /> 格宽度：
+        项目名称：<input type="text" class="ep-t-333" style="width:100px;" v-model="projectName"> 键宽度：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="KeyWidth" @change="KeyBoardUpdate" /> 格宽度：
         <input type="number" class="ep-t-333" style="width:36px;" v-model="gridWidth" /> 节拍数：
-        <input type="number" class="ep-t-333" style="width:36px;" v-model="step" @change="ChartUpdate" /> 小节数：
-        <input type="number" class="ep-t-333" style="width:36px;" v-model="long" @change="ChartUpdate" /> BPM：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="movement.step" @change="ChartUpdate" /> 小节数：
+        <input type="number" class="ep-t-333" style="width:36px;" v-model="movement.long" @change="ChartUpdate" /> BPM：
         <input type="number" class="ep-t-333" style="width:36px;" v-model="movement.speed" /> 默认音量：
         <input type="number" class="ep-t-333" style="width:36px;" v-model="almostVolume" @change="rectify" />
         <button @click="player">播放</button>
+        <button @click="saveProject">保存</button> 读取：
+        <input id="files" type="file" @change="readProject" />
       </div>
       <!-- 内容包络 -->
       <div class="PianoBlock ep-flex" style="width:max-content;">
@@ -53,10 +49,10 @@
         </div> -->
         <!-- 二改 -->
         <div class="IDE-Chart ep-flex-fs ep-flex">
-          <div v-for="(chart,indexC) in Chart" :key="indexC" class="charts-nd ep-flex ep-flex-d-c ep-f-10rp" :class="((indexC / Number(step)) % 2 >= 1 ? (timeAct == indexC ? 'timeAct0 ' : 'charts-bg0 ') : (timeAct == indexC ? 'timeAct1 ' : 'charts-bg1 ')) + ((indexC / Number(step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(step)) % 2 == 0 ? 'cutLine' : ''))"
-            @click.stop="selTime(indexC)">{{indexC}}
-            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '') + (grid.isPlay ? 'gridAct ' : '')" :style="{'height' : KeyWidth + 'px', 'width' : gridWidth + 'px'}" @click.stop="MIDI(indexC,indexG,chart,$event)"
-              @contextmenu.prevent="setKey(indexC,indexG,chart)">
+          <div v-for="(chart,indexC) in Chart" :class="((indexC / Number(movement.step)) % 2 >= 1 ? (timeAct == indexC ? 'timeAct0 ' : 'charts-bg0 ') : (timeAct == indexC ? 'timeAct1 ' : 'charts-bg1 ')) + ((indexC / Number(movement.step)) % 2 == 1 ? 'cutLine' : ((indexC / Number(movement.step)) % 2 == 0 ? 'cutLine' : ''))"
+            @click.stop="selTime(indexC)" :key="indexC" class="charts-nd ep-flex ep-flex-d-c ep-f-10rp">{{indexC}}
+            <div v-for="(grid,indexG) in chart" :key="indexG" class="grid" :class="(grid.type == 'B' ? 'gridB ' : '') + (grid.groupEnd ? 'gE ' : '')" :style="('height:'+KeyWidth+'px;width:'+gridWidth+'px;') + (grid.isPlay ? 'background:' + grid.actStyle + ';' : '')"
+              @click.stop="MIDI(indexC,indexG,chart,$event)" @contextmenu.prevent="setKey(indexC,indexG,chart)">
               <span v-show="showTime">{{indexC}}</span>
               <!-- {{grid.groupId}} -->
             </div>
@@ -66,6 +62,12 @@
     </div>
   </div>
 
+  <script src="./Library/layer/layer.js"></script>
+  <script src="./Library/FileSaver/FileSaver.min.js"></script>
+  <script src="./Public/api.js"></script>
+  <script src="./Public/JS-Piano.js"></script>
+  <script src="./res/instruments.js"></script>
+  <script src="./Music_G/su.js"></script>
   <script>
     var vm = new Vue({
       el: "#app",
@@ -73,15 +75,16 @@
         window.Editor = new Object;
       },
       data: {
+        projectName: 'New Project',
         Piano: E_PIANO, // 键盘 
         Chart: [], // MIDI谱表
         E_KEY: [], // 桥
         KeyWidth: '21',
         gridWidth: '40',
-        step: '4',
-        long: '4',
         almostVolume: 70,
         movement: { // 合成乐谱
+          step: '4',
+          long: '4',
           speed: 60,
           volume: 0.7,
           staff: [],
@@ -90,6 +93,7 @@
         playing: false,
         keyCodeDebug: false,
         showTime: false, // 刻度显示
+        actStyle: 'rgba(0, 211, 200, 0.8)',
       },
       mounted() {
         // 播放控制 Music
@@ -113,6 +117,7 @@
           }
           // TODO: 实现打谱与播放，需要拆分
           chart[gi].isPlay = !chart[gi].isPlay; // 改变选择态
+          chart[gi].actStyle = this.actStyle;
           var groupArr = []; // 创建音元
           chart.forEach(function(item) {
             if (item.isPlay) {
@@ -179,9 +184,6 @@
             group.forEach(function(key, ki) { // 循环 键
               // 插入组值
               key.groupId = gi;
-              // 插入默认状态
-              key.isPlay = false;
-
               // 白键动态宽度
               if (ki == 1 || ki == 3 || ki == 6 || ki == 8 || ki == 10) { // 黑键专区
                 key.type = 'B';
@@ -241,15 +243,15 @@
           var CHART = [...this.E_KEY].reverse();
           // 三改: 数组重构，防止出现野生指针问题
           var groups = [];
-          for (var i = 0; i < this.long; i++) {
+          for (var i = 0; i < this.movement.long; i++) {
             var step = []
-            for (var j = 0; j < this.step; j++) {
+            for (var j = 0; j < this.movement.step; j++) {
               var keyBoard = [];
               CHART.forEach((e, k) => {
                 var newObj = {};
                 newObj.stepTime = i * 4 + j + 1;
                 newObj.groupId = CHART[k].groupId;
-                newObj.isPlay = CHART[k].isPlay;
+                newObj.isPlay = false; // 插入默认状态
                 newObj.scale = CHART[k].scale;
                 newObj.type = CHART[k].type;
                 newObj.key = CHART[k].key;
@@ -261,6 +263,7 @@
           }
           this.Chart = groups;
 
+          this.movement.staff = [];
           // 创建空表 将来可能会废弃
           groups.forEach(function(item, index) {
             this.movement.staff.push(['-']);
@@ -268,8 +271,33 @@
 
           this.$forceUpdate();
         },
-        updateData() {
-
+        saveProject() {
+          window.fileSaver(this.movement, this.projectName)
+        },
+        readProject() {
+          window.fileLoader();
+        },
+        updateMIDI(MIDI) {
+          this.movement = {...MIDI
+          };
+          this.ChartUpdate();
+          MIDI.staff.forEach(function(item, index) {
+            if (item[0] != '-') { // 先过滤掉空
+              item.forEach(function(midi, mid) { // staff深入一维
+                this.Chart.forEach(function(group, gid) { // 解析Chart
+                  group.forEach(function(key, kid) { // Chart深入一维
+                    if (index == gid && midi[0] == key.key && midi[1] == key.groupId) {
+                      key.isPlay = true;
+                      key.actStyle = this.actStyle
+                    }
+                  }.bind(this))
+                }.bind(this))
+              }.bind(this))
+            }
+          }.bind(this));
+          setTimeout(function() {
+            vm.$forceUpdate()
+          })
         },
         debugger(data) {}
       },
