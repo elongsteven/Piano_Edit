@@ -170,7 +170,8 @@ window.pianist = function(M, i, outTime) {
       vm.timeAct = i; // 设置播放交互
       for (var j = 0; j < Music[i].length; j++) {
         if (Music[i][j][0] != "-") {
-          createStyle(KeyMap[Music[i][j][0]][Music[i][j][1]], true)
+          createStyle(KeyMap[Music[i][j][0]][Music[i][j][1]], true);
+          /* 最佳质量 */
           var MusicK = new Audio('./res/e-piano/' + KeyMap[Music[i][j][0]][Music[i][j][1]] + '.mp3');
           if (Music[i][j][2] != undefined) {
             MusicK.volume = Music[i][j][2] / 10;
@@ -179,6 +180,15 @@ window.pianist = function(M, i, outTime) {
             MusicK.volume = Volume;
             MusicK.play();
           }
+          /* 最佳性能 */
+          // PianoKey[KeyMap[Music[i][j][0]][Music[i][j][1]]].currentTime = 0;
+          // if (Music[i][j][2] != undefined) {
+          //   PianoKey[KeyMap[Music[i][j][0]][Music[i][j][1]]].volume = Music[i][j][2] / 10;
+          //   PianoKey[KeyMap[Music[i][j][0]][Music[i][j][1]]].play();
+          // } else {
+          //   PianoKey[KeyMap[Music[i][j][0]][Music[i][j][1]]].volume = Volume;
+          //   PianoKey[KeyMap[Music[i][j][0]][Music[i][j][1]]].play();
+          // }
         }
       }
       // “发条”
@@ -220,7 +230,7 @@ function createStyle(key, autoClean, time) {
 }
 
 console.groupCollapsed("欢迎来到Piano.js");
-console.log('当前版本号: Ver 1.0.0');
+console.log('当前版本号: Ver 1.0.1');
 console.log('已初步完成所有的预期功能');
 console.groupCollapsed("版本号重要功能预告：");
 console.log("Ver 1.1: 添加更换MIDI标记颜色功能");

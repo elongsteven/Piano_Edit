@@ -22,6 +22,8 @@ window.fileLoader = function() {
   var name = selectedFile.name; //读取选中文件的文件名
   var size = selectedFile.size; //读取选中文件的大小
   console.log("文件名:" + name + "大小：" + size);
+  var reg = new RegExp(".json","gi");
+  vm.projectName = name.replace(reg,"");
   var reader = new FileReader(); //这里是核心！！！读取操作就是由它完成的。
   reader.readAsText(selectedFile); //读取文件的内容
 

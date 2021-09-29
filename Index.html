@@ -240,7 +240,7 @@
           }.bind(this));
           this.$forceUpdate();
         },
-        ChartUpdate() {
+        ChartUpdate(e) {
           var CHART = [...this.E_KEY].reverse();
           // 三改: 数组重构，防止出现野生指针问题
           var groups = [];
@@ -264,12 +264,13 @@
           }
           this.Chart = groups;
 
-          this.movement.staff = [];
-          // 创建空表 将来可能会废弃
-          groups.forEach(function(item, index) {
-            this.movement.staff.push(['-']);
-          }.bind(this))
-
+          if (!e) {
+            this.movement.staff = [];
+            // 创建空表 将来可能会废弃
+            groups.forEach(function(item, index) {
+              this.movement.staff.push(['-']);
+            }.bind(this))
+          }
           this.$forceUpdate();
         },
         saveProject() {
@@ -280,8 +281,8 @@
         },
         updateMIDI(MIDI) { // MIDI乐谱渲染主控器
           this.movement = {...MIDI};
-          this.ChartUpdate();
-          MIDI.staff.forEach(function(item, index) {
+          this.ChartUpdate(1);
+          this.movement.staff.forEach(function(item, index) {
             if (item[0] != '-') { // 先过滤掉空
               item.forEach(function(midi, mid) { // staff深入一维
                 this.Chart.forEach(function(group, gid) { // 解析Chart
